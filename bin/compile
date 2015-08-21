@@ -64,7 +64,7 @@ if [ -f $build_dir/gulpfile.js ]; then
   # Do this because we want to cache it with other node_modules. Otherwise it will be pruned.
   # It doesn't matter if grunt and/or grunt-cli is already there
   awk '{ if ( $0 ~ /"devDependencies".*/ ) {
-              printf "%s\n%s\n%s\n", $0, "\"gulp-cli\": \"*\",";
+              printf "%s\n%s\n", $0, "\"gulp-cli\": \"*\",";
          } else {
               print $0;
          }
