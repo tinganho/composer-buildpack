@@ -57,23 +57,23 @@ PATH=$PATH:$build_dir/vendor/node/bin
 
 # Run subsequent node/npm commands from the build path
 cd $build_dir
-
-#if [ -f $build_dir/gulpfile.js ]; then
-  #status "Found gulpfile"
-  #status "Augmenting package.json with grunt and grunt-cli"
+is_gulpfile_present = [ -f $build_dir/gulpfile.js ];
+if $is_gulpfile_present; then
+  status "Found gulpfile"
+  status "Augmenting package.json with grunt and grunt-cli"
   # Do this because we want to cache it with other node_modules. Otherwise it will be pruned.
   # It doesn't matter if grunt and/or grunt-cli is already there
-  #awk '{ if ( $0 ~ /"devDependencies".*/ ) {
-           #   printf "%s\n%s\n", $0, "\"gulp-cli\": \"*\",";
-         #} else {
-         #     print $0;
-         #}
-   # }' package.json > tmp-package.json;
-  #cp tmp-package.json package.json;
-  #rm tmp-package.json;
-#else
- # status "No Gulpfile found"
-#fi
+  awk '{ if ( $0 ~ /"devDependencies".*/ ) {
+              printf "%s\n%s\n", $0, "\"gulp-cli\": \"*\",";
+         } else {
+              print $0;
+         }
+    }' package.json > tmp-package.json;
+  cp tmp-package.json package.json;
+  rm tmp-package.json;
+else
+  status "No Gulpfile found"
+fi
 
 
 # If node_modules directory is checked into source control then
@@ -112,9 +112,6 @@ fi
 
   status "Installing TypeScript"
   npm install typescript@next -g --userconfig $build_dir/.npmrc 2>&1 | indent
-
-  status "Installing L10ns"
-  npm install gulp -g --userconfig $build_dir/.npmrc 2>&1 | indent
 )
 
 # Persist goodies like node-version in the slug
@@ -184,7 +181,7 @@ status "Installing bundler dependencies"
 bundle install 2>&1 | indent
 
 # Check and run gulp
-if [ -f $build_dir/gulpfile.js ]; then
+if $is_gulpfile_present; then
   # get the env vars
   if [ -d "$env_dir" ]; then
     status "Exporting config vars to environment"
@@ -192,7 +189,7 @@ if [ -f $build_dir/gulpfile.js ]; then
   fi
 
   status "Running gulp build task"
-  gulp dist 2>&1 | indent
+  $build_dir/node_modules/.bin/gulp dist 2>&1 | indent
 fi
 
 
