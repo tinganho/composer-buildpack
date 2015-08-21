@@ -57,7 +57,7 @@ PATH=$PATH:$build_dir/vendor/node/bin
 
 # Run subsequent node/npm commands from the build path
 cd $build_dir
-is_gulpfile_present = [ -f $build_dir/gulpfile.js ];
+is_gulpfile_present =[ -f $build_dir/gulpfile.js ];
 if $is_gulpfile_present; then
   status "Found gulpfile"
   status "Augmenting package.json with grunt and grunt-cli"
