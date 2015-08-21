@@ -106,10 +106,12 @@ fi
   status "Installing Node dependencies"
   # Make npm output to STDOUT instead of its default STDERR
   npm install --userconfig $build_dir/.npmrc 2>&1 | indent
+
+  status "Installing L10ns"
   npm install l10ns -g --userconfig $build_dir/.npmrc 2>&1 | indent
 
   status "Installing TypeScript"
-  npm install -g typescript@next --userconfig $build_dir/.npmrc 2>&1 | indent
+  npm install typescript@next -g --userconfig $build_dir/.npmrc 2>&1 | indent
 )
 
 # Persist goodies like node-version in the slug
